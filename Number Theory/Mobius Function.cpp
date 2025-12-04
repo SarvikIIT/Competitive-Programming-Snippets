@@ -3,13 +3,24 @@ using namespace std;
 
 const int N = 5e5 + 9;
 
-int mob[N];
+int mob[N], pr[N], idx;
+bool is_prime[N];
 void mobius() {
   mob[1] = 1;
-  for (int i = 2; i < N; i++){
-    mob[i]--;
-    for (int j = i + i; j < N; j += i) {
-      mob[j] -= mob[i];
+  for (int i = 0; i < N; i++) is_prime[i] = 1;
+  is_prime[0] = is_prime[1] = 0;
+  for (int i = 2; i < N; i++) {
+    if (is_prime[i]) {
+      pr[idx++] = i;
+      mob[i] = -1;
+    }
+    for (int j = 0; j < idx && i * pr[j] < N; j++) {
+      is_prime[i * pr[j]] = 0;
+      if (i % pr[j] == 0) {
+        mob[i * pr[j]] = 0;
+        break;
+      }
+      mob[i * pr[j]] = mob[i] * mob[pr[j]];
     }
   }
 }
